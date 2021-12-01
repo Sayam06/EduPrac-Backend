@@ -10,6 +10,7 @@ const questionRoute = require("./routes/questionRoute")
 const userRoute = require("./routes/userRoute")
 const authRoute = require("./routes/authRoute")
 const checkAdminLoggedIn = require("./middleware/adminAuth")
+const resetDailyObjective = require('./workers/scheduler')
 require('./passport')
 
 const app = express()
@@ -56,4 +57,5 @@ PORT = process.env.PORT || 5000
 
 app.listen(PORT, () => {
   console.log(`server running on port ${PORT}.`)
+  resetDailyObjective()
 })

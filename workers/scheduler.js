@@ -1,23 +1,23 @@
-const cron = require('node-cron')
+const cron = require('cron')
 const mongoose = require('mongoose')
-const user = require('../models/user')
+const user = require('../models/User')
 
-let resetDailyObjective = () => {
-    const Data = mongoose.model('Data', user)
+module.exports = () => {
+    let job = new cron.CronJob('00 59 23 * * *', () => {
+        const Data = mongoose.model('users', user)
 
-    Data.find({}, (err, data) => {
-        if (err) {
-            console.log(err)
-        } else {
-            data.forEach(user => {
-                user.dailyObjective = 0
-                user.save()
-            })
-        }
-    })
+        Data.find({}, (err, data) => {
+            if (err) {
+                console.log(err)
+            } else {
+                data.forEach(user => {
+                    user.dailyObjective = 0
+                    user.save()
+                })
+            }
+        })
+
+        let date = new Date()
+        console.log("Daily Objective Reset: ", date.toLocaleString())
+    }, null, true, 'Asia/Kolkata')
 }
-
-cron.schedule('0 0 0 * * ?', () => {
-    // reset daily objective every day at midnight
-    resetDailyObjective()
-})
